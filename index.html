@@ -10,36 +10,36 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background: #121212; /* Темний фон */
-            color: #e0e0e0; /* Світлий текст */
-            font-family: 'Arial', sans-serif; /* Простий шрифт */
+            background: #121212;
+            color: #e0e0e0;
+            font-family: 'Arial', sans-serif;
             margin: 0;
         }
         .wrapper {
             text-align: center;
-            border: 1px solid #333; /* Темна рамка */
+            border: 1px solid #333;
             padding: 20px;
             border-radius: 10px;
-            background: #1e1e1e; /* Темно-сірий фон */
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* Тінь для об'єму */
+            background: #1e1e1e;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
         }
         h1 {
             font-size: 2rem;
             margin-bottom: 20px;
-            color: #ffffff; /* Білий текст */
+            color: #ffffff;
         }
         input {
             margin: 10px 0;
             padding: 10px;
             font-size: 1rem;
-            border: 1px solid #444; /* Темна рамка */
+            border: 1px solid #444;
             border-radius: 5px;
-            background: #2a2a2a; /* Темний фон */
-            color: #e0e0e0; /* Світлий текст */
+            background: #2a2a2a;
+            color: #e0e0e0;
             text-align: center;
         }
         input::placeholder {
-            color: #888; /* Світло-сірий текст для підказок */
+            color: #888;
         }
         .dice-area {
             display: inline-block;
@@ -48,14 +48,15 @@
         .dice-area p {
             font-size: 1.2rem;
             margin-bottom: 10px;
-            color: #b0b0b0; /* Світло-сірий текст */
+            color: #b0b0b0;
         }
         img {
             width: 100px;
             height: 100px;
-            border: 1px solid #444; /* Темна рамка */
+            margin: 5px;
+            border: 1px solid #444;
             border-radius: 10px;
-            background: #2a2a2a; /* Темний фон */
+            background: #2a2a2a;
         }
         button {
             margin-top: 15px;
@@ -63,25 +64,25 @@
             font-size: 1rem;
             border: none;
             border-radius: 5px;
-            background: #007bff; /* Синій фон */
-            color: #ffffff; /* Білий текст */
+            background: #007bff;
+            color: #ffffff;
             cursor: pointer;
             text-transform: uppercase;
             font-weight: bold;
             transition: background 0.3s ease;
         }
         button:hover {
-            background: #0056b3; /* Темніший синій при наведенні */
+            background: #0056b3;
         }
         #loose {
             font-size: 1.5rem;
             margin-top: 20px;
-            color: #ff5252; /* Червоний текст для повідомлення про поразку */
+            color: #ff5252;
         }
         #message {
             font-size: 1.2rem;
             margin-top: 10px;
-            color: #ffcc00; /* Жовтий текст для повідомлень */
+            color: #ffcc00;
         }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
@@ -102,20 +103,24 @@
         <div class="dice-area">
             <p id="player-name1"></p>
             <img>
+            <img>
             <p id="score1"></p>
         </div>
         <div class="dice-area">
             <p id="player-name2"></p>
+            <img>
             <img>
             <p id="score2"></p>
         </div>
         <div class="dice-area">
             <p id="player-name3"></p>
             <img>
+            <img>
             <p id="score3"></p>
         </div>
         <div class="dice-area">
             <p id="player-name4"></p>
+            <img>
             <img>
             <p id="score4"></p>
         </div>
@@ -130,56 +135,41 @@
         startButton.onclick = startGame;
         rollButton.onclick = function () {
             playGame();
-            loose(); // Викликаємо функцію loose після кожного натискання "Roll"
+            loose();
         };
-
-        document.querySelector("#player1").oninput = saveNames;
-        document.querySelector("#player2").oninput = saveNames;
-        document.querySelector("#player3").oninput = saveNames;
-        document.querySelector("#player4").oninput = saveNames;
 
         let firstRandomNumber, secondRandomNumber, thirdRandomNumber, fourthRandomNumber;
 
         const ListFirstPlayer = [];
         const ListSecondPlayer = [];
         const ListThirdPlayer = [];
-        const ListFourthPlayer = []; // Додано оголошення
+        const ListFourthPlayer = [];
+
+        function updateMessage(msg) {
+            message.innerText = msg;
+        }
 
         function loose() {
             const totalScorePlayer1 = ListFirstPlayer.reduce((sum, current) => sum + current, 0);
             const totalScorePlayer2 = ListSecondPlayer.reduce((sum, current) => sum + current, 0);
             const totalScorePlayer3 = ListThirdPlayer.reduce((sum, current) => sum + current, 0);
             const totalScorePlayer4 = ListFourthPlayer.reduce((sum, current) => sum + current, 0);
-            const numberToCheck = 1;
+
             const scorePlayer1 = document.querySelector("#score1");
             const scorePlayer2 = document.querySelector("#score2");
             const scorePlayer3 = document.querySelector("#score3");
             const scorePlayer4 = document.querySelector("#score4");
             const looseText = document.querySelector("#loose");
 
-            let losingPlayer = null;
-
-            if (ListFirstPlayer.includes(numberToCheck)) {
-                losingPlayer = "Player 1";
-            } else if (ListSecondPlayer.includes(numberToCheck)) {
-                losingPlayer = "Player 2";
-            } else if (ListThirdPlayer.includes(numberToCheck)) {
-                losingPlayer = "Player 3";
-            } else if (ListFourthPlayer.includes(numberToCheck)) {
-                losingPlayer = "Player 4";
-            }
-
-            if (losingPlayer) {
-                looseText.textContent = `${losingPlayer} LOSE!`;
-            } else {
-                looseText.textContent = "No player lose!";
-            }
-
-            // Оновлення тексту для всіх гравців
             scorePlayer1.innerText = `Score: ${totalScorePlayer1}`;
             scorePlayer2.innerText = `Score: ${totalScorePlayer2}`;
             scorePlayer3.innerText = `Score: ${totalScorePlayer3}`;
             scorePlayer4.innerText = `Score: ${totalScorePlayer4}`;
+
+            if (totalScorePlayer1 >= 100) looseText.textContent = "Player 1 WINS!";
+            else if (totalScorePlayer2 >= 100) looseText.textContent = "Player 2 WINS!";
+            else if (totalScorePlayer3 >= 100) looseText.textContent = "Player 3 WINS!";
+            else if (totalScorePlayer4 >= 100) looseText.textContent = "Player 4 WINS!";
         }
 
         function startGame() {
@@ -189,7 +179,7 @@
             const player4Name = document.querySelector("#player4").value.trim();
 
             if (!player1Name || !player2Name || !player3Name || !player4Name) {
-                message.innerText = "Please enter names for all 4 players!";
+                updateMessage("Please enter names for all 4 players!");
                 return;
             }
 
@@ -209,41 +199,50 @@
         }
 
         function playGame() {
-            // Генерація випадкових чисел для кожного гравця
-            firstRandomNumber = Math.floor(Math.random() * 6) + 1;
-            secondRandomNumber = Math.floor(Math.random() * 6) + 1;
-            thirdRandomNumber = Math.floor(Math.random() * 6) + 1;
-            fourthRandomNumber = Math.floor(Math.random() * 6) + 1;
+            const firstRandomNumber1 = Math.floor(Math.random() * 6) + 1;
+            const firstRandomNumber2 = Math.floor(Math.random() * 6) + 1;
 
-            // Встановлення зображень кубиків
-            const firstDiceImage = "images/dice" + firstRandomNumber + ".png";
-            document.querySelectorAll("img")[0].setAttribute("src", firstDiceImage);
+            const secondRandomNumber1 = Math.floor(Math.random() * 6) + 1;
+            const secondRandomNumber2 = Math.floor(Math.random() * 6) + 1;
 
-            const secondDiceImage = "images/dice" + secondRandomNumber + ".png";
-            document.querySelectorAll("img")[1].setAttribute("src", secondDiceImage);
+            const thirdRandomNumber1 = Math.floor(Math.random() * 6) + 1;
+            const thirdRandomNumber2 = Math.floor(Math.random() * 6) + 1;
 
-            const thirdDiceImage = "images/dice" + thirdRandomNumber + ".png";
-            document.querySelectorAll("img")[2].setAttribute("src", thirdDiceImage);
+            const fourthRandomNumber1 = Math.floor(Math.random() * 6) + 1;
+            const fourthRandomNumber2 = Math.floor(Math.random() * 6) + 1;
 
-            const fourthDiceImage = "images/dice" + fourthRandomNumber + ".png";
-            document.querySelectorAll("img")[3].setAttribute("src", fourthDiceImage);
+            const diceImages = document.querySelectorAll("img");
+            diceImages[0].setAttribute("src", "images/dice" + firstRandomNumber1 + ".png");
+            diceImages[1].setAttribute("src", "images/dice" + firstRandomNumber2 + ".png");
+            diceImages[2].setAttribute("src", "images/dice" + secondRandomNumber1 + ".png");
+            diceImages[3].setAttribute("src", "images/dice" + secondRandomNumber2 + ".png");
+            diceImages[4].setAttribute("src", "images/dice" + thirdRandomNumber1 + ".png");
+            diceImages[5].setAttribute("src", "images/dice" + thirdRandomNumber2 + ".png");
+            diceImages[6].setAttribute("src", "images/dice" + fourthRandomNumber1 + ".png");
+            diceImages[7].setAttribute("src", "images/dice" + fourthRandomNumber2 + ".png");
 
-            // Додавання результатів у списки
-            ListFirstPlayer.push(firstRandomNumber);
-            ListSecondPlayer.push(secondRandomNumber);
-            ListThirdPlayer.push(thirdRandomNumber);
-            ListFourthPlayer.push(fourthRandomNumber);
+            calculateScore(firstRandomNumber1, firstRandomNumber2, ListFirstPlayer, "Player 1");
+            calculateScore(secondRandomNumber1, secondRandomNumber2, ListSecondPlayer, "Player 2");
+            calculateScore(thirdRandomNumber1, thirdRandomNumber2, ListThirdPlayer, "Player 3");
+            calculateScore(fourthRandomNumber1, fourthRandomNumber2, ListFourthPlayer, "Player 4");
+        }
 
-            // Логування результатів у консоль
-            console.log("Player 1 rolled:", firstRandomNumber);
-            console.log("Player 2 rolled:", secondRandomNumber);
-            console.log("Player 3 rolled:", thirdRandomNumber);
-            console.log("Player 4 rolled:", fourthRandomNumber);
-
-            console.log("Player 1 history:", ListFirstPlayer);
-            console.log("Player 2 history:", ListSecondPlayer);
-            console.log("Player 3 history:", ListThirdPlayer);
-            console.log("Player 4 history:", ListFourthPlayer);
+        function calculateScore(dice1, dice2, playerList, playerName) {
+            if (dice1 === 1 && dice2 === 1) {
+                playerList.push(25);
+                updateMessage(`${playerName} отримує 25 очок за два "1"!`);
+            } else if (dice1 === dice2) {
+                const score = (dice1 + dice2) * 2;
+                playerList.push(score);
+                updateMessage(`${playerName} отримує ${score} очок за дублікати!`);
+            } else if (dice1 === 1 || dice2 === 1) {
+                updateMessage(`${playerName} втрачає всі очки за цей раунд через "1"!`);
+                playerList.push(0);
+            } else {
+                const score = dice1 + dice2;
+                playerList.push(score);
+                updateMessage(`${playerName} отримує ${score} очок.`);
+            }
         }
 
         function saveNames() {
@@ -252,10 +251,12 @@
             const player3Name = document.querySelector("#player3").value.trim();
             const player4Name = document.querySelector("#player4").value.trim();
 
-            localStorage.setItem("player1Name", player1Name);
-            localStorage.setItem("player2Name", player2Name);
-            localStorage.setItem("player3Name", player3Name);
-            localStorage.setItem("player4Name", player4Name);
+            localStorage.setItem("player1", player1Name);
+            localStorage.setItem("player2", player2Name);
+            localStorage.setItem("player3", player3Name);
+            localStorage.setItem("player4", player4Name);
+
+            updateMessage("Names saved: " + [player1Name, player2Name, player3Name, player4Name].join(", "));
         }
     </script>
 </body>
